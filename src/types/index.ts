@@ -23,3 +23,38 @@ export interface IBuyer {
   phone: string;
   address: string;
 } 
+
+export interface IOrder {
+  items: string[];
+  total: number;
+  buyer: IBuyer;
+}
+
+// Объект заказа, который приложение отправляет на сервер.
+export interface IOrder {
+	items: string[]; // массив id товаров из IProduct
+	total: number;   // общая сумма заказа
+	buyer: IBuyer;   // данные покупателя
+}
+
+// Объект, который сервер возвращает после успешного оформления заказа.
+export interface IOrderResult {
+	id: string;     // уникальный идентификатор заказа, присвоенный сервером
+	total: number;  // подтверждённая сумма заказа
+}
+
+export class ShowApi {
+  private api: IApi;
+
+  constructor(api: IApi) {
+    this.api = api;
+  };
+
+  getProducts(): Promise<IProduct[]> {
+    return this.api.get('/product/');
+  }
+
+  createorder(order: IOrder): Promise<IOrderResult> {
+    return this.api.post('/order/', order);
+  }
+}
