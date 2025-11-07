@@ -42,19 +42,3 @@ export interface IOrderResult {
 	id: string;     // уникальный идентификатор заказа, присвоенный сервером
 	total: number;  // подтверждённая сумма заказа
 }
-
-export class ShowApi {
-  private api: IApi;
-
-  constructor(api: IApi) {
-    this.api = api;
-  };
-
-  getProducts(): Promise<IProduct[]> {
-    return this.api.get('/product/');
-  }
-
-  createorder(order: IOrder): Promise<IOrderResult> {
-    return this.api.post('/order/', order);
-  }
-}
