@@ -104,8 +104,8 @@ showApi.getProducts().then(products => {
 
   console.log("Тестовый заказ для отправки: ", testOrder);
 })
-.catch(error => {
-  console.error("Ошибка при получении товаров с сервера: ", error);
+.catch(err => {
+  console.error("Ошибка при получении товаров с сервера: ", err);
 });
 
 console.log('CDN_URL для изображений: ', CDN_URL);
