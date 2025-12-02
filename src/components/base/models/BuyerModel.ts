@@ -1,16 +1,39 @@
+import { IEvents } from "../Events";
 import { IBuyer, TPayment } from "../../../types";
 
 export class BuyerModel {
+  private events: IEvents;
   private payment: TPayment = '' as TPayment;
   private email: string = '';
   private phone: string = '';
   private address: string = ''; 
 
+  constructor(events: IEvents) {
+    this.events = events;
+  }
+
   setData(data: Partial<IBuyer>): void {
-    if (data.payment !== undefined) this.payment = data.payment;
-    if (data.email !== undefined) this.email = data.email;
-    if (data.phone !== undefined) this.phone = data.phone;
-    if (data.address !== undefined) this.address = data.address;
+    let isUpdated = false;
+    if (data.payment !== undefined) {
+      this.payment = data.payment;
+      isUpdated = true;
+    }
+    if (data.email !== undefined) {
+      this.email = data.email;
+      isUpdated = true;
+    }
+    if (data.phone !== undefined) {
+      this.phone = data.phone;
+      isUpdated = true;
+    }
+    if (data.address !== undefined) {
+      this.address = data.address;
+      isUpdated = true;
+    }
+    if (isUpdated === true) {
+      const errors = this.validate();
+      this.events.emit('form:change', { errors: errors, fields: data });
+    }
   }
 
   getData(): IBuyer {
@@ -27,6 +50,8 @@ export class BuyerModel {
     this.email = '';
     this.phone = '';
     this.address = '';
+    const errors = this.validate();
+    this.events.emit('form:change', { errors: errors });
   }
 
   validate(): Record<string, string> {

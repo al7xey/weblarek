@@ -24,21 +24,12 @@ export interface IBuyer {
   address: string;
 } 
 
-export interface IOrder {
-  items: string[];
+export interface IOrder extends IBuyer {
+  items: string[]; 
   total: number;
-  buyer: IBuyer;
 }
 
-// Объект заказа, который приложение отправляет на сервер.
-export interface IOrder {
-	items: string[]; // массив id товаров из IProduct
-	total: number;   // общая сумма заказа
-	buyer: IBuyer;   // данные покупателя
-}
-
-// Объект, который сервер возвращает после успешного оформления заказа.
 export interface IOrderResult {
-	id: string;     // уникальный идентификатор заказа, присвоенный сервером
-	total: number;  // подтверждённая сумма заказа
+	id: string;     
+	total: number;  
 }
