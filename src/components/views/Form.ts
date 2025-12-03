@@ -1,5 +1,5 @@
-import { ensureElement } from "../../../utils/utils";
-import { Component } from "../Component";
+import { ensureElement } from "../../utils/utils";
+import { Component } from "../base/Component";
 
 interface IForm {
   error: string;
@@ -14,7 +14,7 @@ export class Form<T> extends Component<IForm & T> {
     super(container);
 
     this.formError = ensureElement<HTMLElement>('.form__errors', this.container);
-    this.formButton = ensureElement<HTMLButtonElement>('.button', this.container);
+    this.formButton = ensureElement<HTMLButtonElement>('button[type="submit"]', this.container);
   }
 
   set error(value: string) {

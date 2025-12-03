@@ -1,5 +1,5 @@
-import { IEvents } from "../Events";
-import { IBuyer, TPayment } from "../../../types";
+import { IEvents } from "../base/Events";
+import { IBuyer, TPayment } from "../../types";
 
 export class BuyerModel {
   private events: IEvents;
@@ -13,27 +13,17 @@ export class BuyerModel {
   }
 
   setData(data: Partial<IBuyer>): void {
-    let isUpdated = false;
-    if (data.payment !== undefined) {
-      this.payment = data.payment;
-      isUpdated = true;
-    }
-    if (data.email !== undefined) {
-      this.email = data.email;
-      isUpdated = true;
-    }
-    if (data.phone !== undefined) {
-      this.phone = data.phone;
-      isUpdated = true;
-    }
-    if (data.address !== undefined) {
-      this.address = data.address;
-      isUpdated = true;
-    }
-    if (isUpdated === true) {
-      const errors = this.validate();
-      this.events.emit('form:change', { errors: errors, fields: data });
-    }
+    if (data.payment !== undefined) this.payment = data.payment;
+
+    if (data.email !== undefined) this.email = data.email;
+    
+    if (data.phone !== undefined) this.phone = data.phone;
+
+    if (data.address !== undefined) this.address = data.address;
+
+    const errors = this.validate();
+    this.events.emit('form:change', { errors: errors, fields: data });
+
   }
 
   getData(): IBuyer {

@@ -1,5 +1,5 @@
-import { ensureElement } from "../../../utils/utils";
-import { IEvents } from "../Events";
+import { ensureElement } from "../../utils/utils";
+import { IEvents } from "../base/Events";
 import { CardView } from "./CardView";
 
 interface IModalCardView {

@@ -1,5 +1,5 @@
-import { IProduct } from "../../../types";
-import { IEvents } from "../Events"
+import { IProduct } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class CartModel {
   private events: IEvents;

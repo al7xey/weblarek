@@ -1,7 +1,7 @@
-import { ensureElement } from "../../../utils/utils";
+import { ensureElement } from "../../utils/utils";
 import { Form } from "./Form";
-import { IEvents } from "../Events";
-import { TPayment } from "../../../types";
+import { IEvents } from "../base/Events";
+import { TPayment } from "../../types";
 
 interface IOrderForm {
   address: string;
@@ -12,7 +12,7 @@ export class OrderForm extends Form<IOrderForm> {
   protected cardButton: HTMLButtonElement;
   protected cashButton: HTMLButtonElement;
   protected inputAddress: HTMLInputElement;
-  protected orderButton: HTMLButtonElement;
+  public orderButton: HTMLButtonElement;
 
   constructor(container: HTMLElement, protected events: IEvents) {
     super(container); 
@@ -33,6 +33,11 @@ export class OrderForm extends Form<IOrderForm> {
     this.inputAddress.addEventListener('input', (evt: Event) => {
         const target = evt.target as HTMLInputElement;
         events.emit('order:change', { field: 'address', value: target.value });
+    });
+
+    this.container.addEventListener('submit', (evt: Event) => {
+        evt.preventDefault();
+        this.events.emit('order:submit'); 
     });
   }
 

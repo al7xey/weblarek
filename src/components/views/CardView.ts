@@ -1,5 +1,5 @@
-import { ensureElement } from "../../../utils/utils";
-import { Component } from "../Component";
+import { ensureElement } from "../../utils/utils";
+import { Component } from "../base/Component";
 
 interface ICardView {
   title: string;

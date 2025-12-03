@@ -1,5 +1,4 @@
-import { ensureElement } from "../../../utils/utils";
-import { IEvents } from "../Events";
+import { ensureElement } from "../../utils/utils";
 import { CardView } from "./CardView";
 
 interface IBasketCardView {
@@ -10,11 +9,13 @@ export class BasketCardView extends CardView implements IBasketCardView {
   protected basketCardIndex: HTMLElement;
   public basketButton: HTMLButtonElement;
 
-  constructor(protected events: IEvents, container: HTMLElement) {
+  constructor(container: HTMLElement, onClick: () => void) {
     super(container);
 
     this.basketCardIndex = ensureElement<HTMLElement>('.basket__item-index', this.container);
-    this.basketButton = ensureElement<HTMLButtonElement>('.card__button', this.container);
+    this.basketButton = ensureElement<HTMLButtonElement>('.basket__item-delete', this.container);
+
+    this.basketButton.addEventListener('click', onClick);
   }
 
   set index(value: number) {
