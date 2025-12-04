@@ -127,8 +127,6 @@ events.on('cart:change', () => {
 const basketElement = cloneTemplate(basketTemplate);
 const basketView = new BasketItem(events, basketElement);
 
-modal.content = basketView.render();
-
 // Обновление корзины
 events.on('basket:change', () => {
     const cartItems = cartModel.getItems();
@@ -162,6 +160,7 @@ events.on('basket:change', () => {
 
 // Открытие корзины
 events.on('basket:open', () => {
+    modal.content = basketView.render();
     modal.open();
 });
 
@@ -251,11 +250,11 @@ events.on('contacts:submit', () => {
         });
 });
 
-// Загрузка данных
 showApi.getProducts()
-    .then((products) => {
-        catalogModel.setProducts(products);
+    .then((items: IProduct[]) => {
+        catalogModel.setProducts(items); 
+        console.log('Каталог успешно загружен');
     })
-    .catch(err => {
-        console.error("Ошибка при получении товаров с сервера:", err);
+    .catch((err) => {
+        console.error('Ошибка загрузки товаров:', err);
     });

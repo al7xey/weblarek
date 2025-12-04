@@ -8,10 +8,10 @@ export class ShowApi {
   };
 
   getProducts(): Promise<IProduct[]> {
-    return this.api.get('/product/');
+    return this.api.get('/product');
   }
 
   createorder(order: IOrder): Promise<IOrderResult> {
-    return this.api.post('/order/', order);
+    return this.api.post('/order', order);
   }
 }
