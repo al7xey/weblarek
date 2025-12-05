@@ -24,8 +24,7 @@ export class Api {
         return fetch(this.baseUrl + uri, {
             ...this.options,
             method: 'GET'
-        })
-        .then(response => this.handleResponse<T>(response)); 
+        }).then(this.handleResponse<T>);
     }
 
     post<T extends object>(uri: string, data: object, method: ApiPostMethods = 'POST') {
@@ -33,7 +32,6 @@ export class Api {
             ...this.options,
             method,
             body: JSON.stringify(data)
-        })
-        .then(response => this.handleResponse<T>(response));
+        }).then(this.handleResponse<T>);
     }
 }

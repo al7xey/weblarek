@@ -16,18 +16,18 @@ export class CartModel {
   addItem(item: IProduct): void {
     if (!this.hasItem(item.id)) {
       this.items.push(item);
-      this.events.emit('cart:change');
+      this.notifyChange();
     }
   }
 
   removeItem(id: string): void {
-    this.items.filter(item => item.id !== id);
-    this.events.emit('cart:change');
+    this.items = this.items.filter(item => item.id !== id);
+    this.notifyChange();
   }
 
   clear(): void {
     this.items = [];
-    this.events.emit('cart:change');
+    this.notifyChange();
   }
 
   getTotalPrice(): number {
@@ -40,5 +40,10 @@ export class CartModel {
 
   hasItem(id: string): boolean {
     return this.items.some(product => product.id === id);
+  }
+
+  private notifyChange() {
+    this.events.emit('cart:change');
+    this.events.emit('basket:change');
   }
 }

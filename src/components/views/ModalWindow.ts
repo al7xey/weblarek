@@ -9,6 +9,8 @@ interface IModalWindow {
 export class ModalWindow extends Component<IModalWindow> { 
   protected modalCloseButton: HTMLButtonElement; 
   protected modalContent: HTMLElement; 
+  private currentContent: HTMLElement | null = null;
+  private currentInstance: Component<any> | null = null;
 
   constructor(container: HTMLElement) { 
     super(container); 
@@ -20,10 +22,21 @@ export class ModalWindow extends Component<IModalWindow> {
     this.container.addEventListener('click', this.handleOverlayClick.bind(this));
   } 
 
-  set content(item: HTMLElement) { 
+  set content(item: HTMLElement | Component<unknown>) { 
     this.modalContent.innerHTML = '';
-    this.modalContent.appendChild(item); 
+
+    if (typeof (item as any)?.render === 'function') {
+      this.currentInstance = item as Component<unknown>;
+      this.currentContent = this.currentInstance.element;
+      this.modalContent.appendChild(this.currentInstance.render());
+    } else {
+      this.currentInstance = null;
+    }
   } 
+
+  get content(): HTMLElement | Component<unknown> | null {
+    return this.currentInstance ?? this.currentContent;
+  }
 
   open() { 
     this.container.classList.add('modal_active'); 
@@ -32,6 +45,8 @@ export class ModalWindow extends Component<IModalWindow> {
   close() { 
     this.container.classList.remove('modal_active'); 
     this.modalContent.innerHTML = '';
+    this.currentInstance = null;
+    this.currentContent = null;
   } 
 
   private handleOverlayClick(event: MouseEvent) {

@@ -22,9 +22,12 @@ export class BasketItem extends Component<IBasketItem> {
     this.basketButton = ensureElement<HTMLButtonElement>('.basket__button', this.container);
     this.basketTotal = ensureElement<HTMLElement>('.basket__price', this.container);
     
-    this.basketButton.addEventListener('click', () => {
+    this.basketButton.type = 'button';
+
+    this.basketButton.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      evt.stopPropagation();
       events.emit('order:address');
-      events.emit('modal:close');  
     });
   }
 

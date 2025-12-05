@@ -1,11 +1,11 @@
 import "./scss/styles.scss";
 // Импорт базовых компонентов
 import { Api } from './components/base/Api.ts';
+import { ShowApi } from './components/base/ShowApi.ts';
 import { EventEmitter } from "./components/base/Events.ts";
-import { ShowApi } from "./components/base/ShowApi.ts";
 import { API_URL, CDN_URL } from "./utils/constants.ts";
 import { cloneTemplate, ensureElement } from "./utils/utils.ts";
-import { IBuyer, IOrder, IOrderResult, IProduct } from "./types/index.ts";
+import { IBuyer, IOrder, IProduct } from "./types/index.ts";
 
 // Импорт моделей
 import { CatalogModel } from "./components/models/CatalogModel.ts";
@@ -29,7 +29,7 @@ const events = new EventEmitter();
 
 // Инициализация Api
 const api = new Api(API_URL);
-const showApi = new ShowApi(api);
+const larekApi = new ShowApi(api)
 
 // Инициализация Моделей
 const catalogModel = new CatalogModel(events); 
@@ -106,7 +106,7 @@ events.on('product:select', (data: {product: IProduct}) => {
   modalCardView.cardButton.disabled = !isAvailable || inCart;
   modalCardView.cardButton.textContent = !isAvailable ? 'Недоступно' : (inCart ? 'Уже в корзине' : 'Купить');
 
-  modal.content = modalCardView.render();
+  modal.content = modalCardView;
   modal.open();
 });
 
@@ -160,23 +160,28 @@ events.on('basket:change', () => {
 
 // Открытие корзины
 events.on('basket:open', () => {
-    modal.content = basketView.render();
+    // Обновляем содержимое перед показом, чтобы кнопка и список были актуальными
+    events.emit('basket:change');
+    modal.content = basketView;
     modal.open();
 });
+
+// Закрытие модального окна по событию (например, из кнопок)
+events.on('modal:close', () => modal.close());
 
 const orderElement = cloneTemplate(orderTemplate);
 const orderForm = new OrderForm(orderElement, events);
 
 // Переход к форме адреса и оплаты 
 events.on('order:address', () => { 
+    // Сначала показываем форму, затем сбрасываем/подставляем данные
+    modal.content = orderForm; 
+    modal.open(); 
+
     buyerModel.clear();  
     const currentData = buyerModel.getData(); 
-     
     orderForm.render({ payment: currentData.payment, address: currentData.address ?? '' }); 
     orderForm.submitButton = false;  
-
-    modal.content = orderForm.render(); 
-    modal.open(); 
 });
 
 // Изменение данных в формах 
@@ -216,12 +221,13 @@ events.on('order:submit', () => {
     
     contactForm.submitButton = !errors.email && !errors.phone; 
 
-    modal.content = contactForm.render();
+    modal.content = contactForm;
     modal.open();
 });
 
 const successElement = cloneTemplate(successTemplate);
 const successView = new OrderSuccess(successElement);
+
 // Отправка заказа
 events.on('contacts:submit', () => {
     const customerData = buyerModel.getData();
@@ -235,26 +241,31 @@ events.on('contacts:submit', () => {
         items: cartModel.getItems().map(p => p.id),
     };
 
-    api.post<IOrderResult>('/order', orderData)
-        .then((result: IOrderResult) => {
-            
-            successView.total = result.total; 
-            
-            modal.content = successView.render();
-            
-            cartModel.clear(); 
-            buyerModel.clear(); 
-        })
-        .catch(err => {
-            console.error("Ошибка при отправке заказа:", err);
-        });
+    larekApi
+    .submitOrder(orderData)
+    .then(() => {
+        cartModel.clear();
+        buyerModel.clear();
+        successView.total = orderData.total;
+        modal.content = successView;
+        modal.open();
+  })
+  .catch((error) => {
+    console.error("Ошибка оформления заказа:", error);
+  });
 });
 
-showApi.getProducts()
-    .then((items: IProduct[]) => {
-        catalogModel.setProducts(items); 
-        console.log('Каталог успешно загружен');
-    })
-    .catch((err) => {
-        console.error('Ошибка загрузки товаров:', err);
-    });
+// Кнопка "За новыми покупками" закрывает модалку
+modalContainer.addEventListener('order:success', () => {
+  modal.close();
+});
+
+
+larekApi
+  .fetchProductsList()
+  .then(({ items }) => {
+    catalogModel.setProducts(items);
+  })
+  .catch((error) => {
+    console.error('Ошибка загрузки товаров: ', error);
+  });

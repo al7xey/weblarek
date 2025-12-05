@@ -17,6 +17,11 @@ export class OrderSuccess extends Component<IOrderSuccess> {
     this.orderDescription = ensureElement<HTMLElement>('.order-success__description', this.container);
     this.orderButton = ensureElement<HTMLButtonElement>('.order-success__close', this.container);
     this.orderTotal = ensureElement<HTMLElement>('.order-success__description', this.container);
+
+    this.orderButton.addEventListener('click', () => {
+      const event = new Event('order:success', { bubbles: true });
+      this.container.dispatchEvent(event);
+    });
   }
 
   set description(value: string) {
