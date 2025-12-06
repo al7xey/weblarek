@@ -42,8 +42,30 @@ export class CartModel {
     return this.items.some(product => product.id === id);
   }
 
+  checkItem(id: string, product?: IProduct): void {
+    const inCart = this.hasItem(id);
+    this.events.emit('cart:check-response', { productId: id, inCart, product });
+  }
+
+  getDataForOrder(): void {
+    this.events.emit('cart:data-response', {
+      total: this.getTotalPrice(),
+      items: this.items.map(p => p.id)
+    });
+  }
+
+  getBasketData(): void {
+    this.events.emit('basket:change', { 
+      items: this.items, 
+      total: this.getTotalPrice() 
+    });
+  }
+
   private notifyChange() {
-    this.events.emit('cart:change');
-    this.events.emit('basket:change');
+    this.events.emit('cart:change', { count: this.items.length });
+    this.events.emit('basket:change', { 
+      items: this.items, 
+      total: this.getTotalPrice() 
+    });
   }
 }

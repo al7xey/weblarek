@@ -23,6 +23,8 @@ export class BasketItem extends Component<IBasketItem> {
     this.basketTotal = ensureElement<HTMLElement>('.basket__price', this.container);
     
     this.basketButton.type = 'button';
+    this.list = [];
+    this.basketButton.disabled = true;
 
     this.basketButton.addEventListener('click', (evt) => {
       evt.preventDefault();
@@ -35,6 +37,9 @@ export class BasketItem extends Component<IBasketItem> {
     this.basketList.innerHTML = '';
     if (typeof items === 'string') {
         this.basketList.textContent = items;
+    } else if (items.length === 0) {
+        // Оставляем пустым для CSS псевдоэлемента или устанавливаем текст один раз
+        this.basketList.textContent = 'Корзина пуста';
     } else {
       items.forEach(item => {
         this.basketList.appendChild(item);

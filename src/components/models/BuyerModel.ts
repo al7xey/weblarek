@@ -41,7 +41,22 @@ export class BuyerModel {
     this.phone = '';
     this.address = '';
     const errors = this.validate();
-    this.events.emit('form:change', { errors: errors });
+    const clearedData = this.getData();
+    this.events.emit('form:change', { errors: errors, fields: clearedData });
+  }
+
+  getDataForOrder(): IBuyer {
+    return this.getData();
+  }
+
+  validateForOrder(): void {
+    const errors = this.validate();
+    const fields = this.getData();
+    this.events.emit('buyer:order-validated', { errors, fields });
+  }
+
+  getDataForResponse(): void {
+    this.events.emit('buyer:data-response', this.getData());
   }
 
   validate(): Record<string, string> {

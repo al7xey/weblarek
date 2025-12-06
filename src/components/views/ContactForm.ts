@@ -34,10 +34,10 @@ export class ContactForm extends Form<IContactForm> {
   }
   
   set email(value: string) {
-    this.inputEmail.textContent = value;
+    this.inputEmail.value = value;
   }
 
   set phone(value: string) {
-    this.inputPhone.textContent = value;
+    this.inputPhone.value = value;
   }
 }

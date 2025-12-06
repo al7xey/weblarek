@@ -31,4 +31,10 @@ export class CatalogModel {
   getSelectedProduct(): IProduct | null {
     return this.selectedProduct;
   }
+
+  addToCart(): void {
+    if (this.selectedProduct) {
+      this.events.emit('basket:add-product', { product: this.selectedProduct });
+    }
+  }
 }

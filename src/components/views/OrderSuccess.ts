@@ -1,5 +1,6 @@
 import { ensureElement } from "../../utils/utils";
 import { Component } from "../base/Component";
+import { IEvents } from "../base/Events";
 
 interface IOrderSuccess {
   description: string;
@@ -11,7 +12,7 @@ export class OrderSuccess extends Component<IOrderSuccess> {
   protected orderButton: HTMLButtonElement;
   protected orderTotal: HTMLElement;
 
-  constructor(container: HTMLElement) {
+  constructor(protected events: IEvents, container: HTMLElement) {
     super(container);
 
     this.orderDescription = ensureElement<HTMLElement>('.order-success__description', this.container);
@@ -19,8 +20,7 @@ export class OrderSuccess extends Component<IOrderSuccess> {
     this.orderTotal = ensureElement<HTMLElement>('.order-success__description', this.container);
 
     this.orderButton.addEventListener('click', () => {
-      const event = new Event('order:success', { bubbles: true });
-      this.container.dispatchEvent(event);
+      this.events.emit('modal:close');
     });
   }
 

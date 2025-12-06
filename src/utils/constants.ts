@@ -20,6 +20,15 @@ export const categoryMap = {
   'другое': 'card__category_other',
 };
 
+/* Константа соответствий категорий товара модификаторам для фона карточки. */
+export const cardCategoryMap = {
+  'софт-скил': 'card_soft',
+  'хард-скил': 'card_hard',
+  'кнопка': 'card_button',
+  'дополнительное': 'card_additional',
+  'другое': 'card_other',
+};
+
 export const settings = {
 
 };

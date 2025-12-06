@@ -17,6 +17,7 @@
 
     .card__title {
       flex-grow: 0;
+      text-align: left;
     }
   }
 
@@ -54,6 +55,7 @@
     font-weight: 500;
     margin: 0;
     flex-grow: 1;
+    text-align: left; 
   }
   &__text {
     text-align: left;
